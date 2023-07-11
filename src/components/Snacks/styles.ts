@@ -22,7 +22,7 @@ export const Container = styled.div`
       top: -0.5rem;
       left: -0.5rem;
 
-      background: ${({ theme }) => theme.colors.red};
+      background: ${({ theme }) => theme.colors.darkgreen};
       width: 2rem;
       height: 2rem;
       border-radius: 50%;
@@ -67,7 +67,7 @@ export const Container = styled.div`
       }
 
       button {
-        background: ${({ theme }) => theme.colors.red};
+        background: ${({ theme }) => theme.colors.darkgreen};
         width: 3rem;
         height: 3rem;
         border: none;
