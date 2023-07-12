@@ -11,7 +11,7 @@ export function PayOrder() {
 
   return (
     <Container>
-      <button type='submit'>Pagar</button>
+      <button type='submit'>Realizar Pedido</button>
       <span>
         Total <strong>{currencyFormat(totalAmount)}</strong>
       </span>
