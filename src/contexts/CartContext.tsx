@@ -117,24 +117,21 @@ export function CartProvider({ children }: CartProviderProps) {
     navigate('/payment')
   }
 
-  async function payOrder(customer: CustomerData) {
-    try {
-      const response = await processCheckout(cart, customer)
+  let currentOrderId = 0
 
-      if (response.data.status !== 'PAID') {
-        toast.error('Erro ao processar o pagamento, por favor, tente novamente mais tarde.')
-        return
-      }
-
-      clearCart()
-
-      navigate(`/order/success/${response.data.id}`)
-    } catch (error) {
-      console.error(error)
-      toast.error('Erro ao processar o pedido.')
-    }
-    return
+  function generateOrderId() {
+    currentOrderId += 1
+    return currentOrderId
   }
+  
+  function payOrder(customer: CustomerData) {
+    const orderId = generateOrderId()
+    clearCart()
+    
+    navigate(`/order/success/${orderId}`)
+  }
+  
+  
 
   return (
     <CartContext.Provider
