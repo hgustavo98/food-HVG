@@ -127,7 +127,7 @@ export function CartProvider({ children }: CartProviderProps) {
   function payOrder(customer: CustomerData) {
     const orderId = generateOrderId()
     clearCart()
-    
+    processCheckout(cart, customer)
     navigate(`/order/success/${orderId}`)
   }
   
