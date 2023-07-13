@@ -39,7 +39,7 @@ export const Container = styled.ul`
   }
 
   @media (max-width: 720px) {
-    top: 0.5rem;
+    top: 1rem;
     bottom: initial;
 
     span:first-child {
@@ -47,7 +47,6 @@ export const Container = styled.ul`
     }
   }
 `
-
 
 export const Button = styled.li`
   cursor: pointer;
@@ -69,15 +68,6 @@ export const Button = styled.li`
       font-weight: 500;
       font-size: 1rem;
       color: ${({ theme }) => theme.colors.white};
-    }
-
-    @media (max-width: 720px) {
-      top: 0.5rem;
-      bottom: initial;
-  
-      span:first-child {
-        display: none;
-      }
     }
 
 `;
@@ -103,14 +93,4 @@ export const Option = styled.li`
       color: ${({ theme }) => theme.colors.white};
     }
 
-    @media (max-width: 720px) {
-      top: 0.5rem;
-      bottom: initial;
-  
-      span:first-child {
-        display: none;
-      }
-    }
-
 `
-
