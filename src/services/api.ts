@@ -20,7 +20,6 @@ export const processCheckout = (cart: Snack[], customer: CustomerData) =>
       fullName: customer.fullName,
       email: customer.email,
       mobile: customer.mobile,
-      document: customer.document,
       zipCode: customer.zipCode,
       street: customer.street,
       number: customer.number,
@@ -29,7 +28,7 @@ export const processCheckout = (cart: Snack[], customer: CustomerData) =>
       city: customer.city,
       state: customer.state,
     },
-   
+
   })
 
 export default api

@@ -1,137 +1,135 @@
-import { createContext, ReactNode, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { createContext, ReactNode, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import { CustomerData } from '../interfaces/CustomerData'
-import { Snack } from '../interfaces/Snack'
-import { SnackData } from '../interfaces/SnackData'
+import { CustomerData } from '../interfaces/CustomerData';
+import { Snack } from '../interfaces/Snack';
+import { SnackData } from '../interfaces/SnackData';
 
-import { snackEmoji } from '../helpers/snackEmoji'
-import { processCheckout } from '../services/api'
+import { snackEmoji } from '../helpers/snackEmoji';
+import { processCheckout } from '../services/api';
 
 interface CartContextProps {
-  cart: Snack[]
-  addSnackIntoCart: (snack: SnackData) => void
-  removeSnackFromCart: (snack: Snack) => void
-  snackCartIncrement: (snack: Snack) => void
-  snackCartDecrement: (snack: Snack) => void
-  confirmOrder: () => void
-  payOrder: (customer: CustomerData) => void
+  cart: Snack[];
+  addSnackIntoCart: (snack: SnackData) => void;
+  removeSnackFromCart: (snack: Snack) => void;
+  snackCartIncrement: (snack: Snack) => void;
+  snackCartDecrement: (snack: Snack) => void;
+  confirmOrder: () => void;
+  payOrder: (customer: CustomerData) => void;
 }
 
 interface CartProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
-export const CartContext = createContext({} as CartContextProps)
+export const CartContext = createContext({} as CartContextProps);
 
-const localStorageKey = '@FoodCommerce:cart'
+const localStorageKey = '@FoodCommerce:cart';
 
 export function CartProvider({ children }: CartProviderProps) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [cart, setCart] = useState<Snack[]>(() => {
-    const value = localStorage.getItem(localStorageKey)
-    if (value) return JSON.parse(value)
+    const value = localStorage.getItem(localStorageKey);
+    if (value) return JSON.parse(value);
 
-    return []
-  })
+    return [];
+  });
 
   function saveCart(items: Snack[]) {
-    setCart(items)
-    localStorage.setItem(localStorageKey, JSON.stringify(items))
+    setCart(items);
+    localStorage.setItem(localStorageKey, JSON.stringify(items));
   }
 
   function clearCart() {
-    localStorage.removeItem(localStorageKey)
+    localStorage.removeItem(localStorageKey);
   }
 
   function addSnackIntoCart(snack: SnackData): void {
     const snackExistentInCart = cart.find(
-      (item) => item.snack === snack.snack && item.id === snack.id,
-    )
+      (item) => item.snack === snack.snack && item.id === snack.id
+    );
 
     if (snackExistentInCart) {
       const newCart = cart.map((item) => {
         if (item.id === snack.id) {
-          const quantity = item.quantity + 1
-          const subtotal = item.price * quantity
+          const quantity = item.quantity + 1;
+          const subtotal = item.price * quantity;
 
-          return { ...item, quantity, subtotal }
+          return { ...item, quantity, subtotal };
         }
 
-        return item
-      })
+        return item;
+      });
 
-      toast.success(`Outro(a) ${snackEmoji(snack.snack)} ${snack.name} adicionado nos pedidos!`)
-      saveCart(newCart)
+      toast.success(`Outro(a) ${snackEmoji(snack.snack)} ${snack.name} adicionado nos pedidos!`);
+      saveCart(newCart);
 
-      return
+      return;
     }
 
-    const newSnack = { ...snack, quantity: 1, subtotal: snack.price }
-    const newCart = [...cart, newSnack] // push de um array
+    const newSnack = { ...snack, quantity: 1, subtotal: snack.price };
+    const newCart = [...cart, newSnack]; // push de um array
 
-    toast.success(`${snackEmoji(snack.snack)} ${snack.name} adicionado nos pedidos!`)
-    saveCart(newCart)
+    toast.success(`${snackEmoji(snack.snack)} ${snack.name} adicionado nos pedidos!`);
+    saveCart(newCart);
   }
 
   function removeSnackFromCart(snack: Snack) {
-    const newCart = cart.filter((item) => !(item.id === snack.id && item.snack === snack.snack))
+    const newCart = cart.filter((item) => !(item.id === snack.id && item.snack === snack.snack));
 
-    saveCart(newCart)
+    saveCart(newCart);
   }
 
   function updateSnackQuantity(snack: Snack, newQuantity: number) {
-    if (newQuantity <= 0) return
+    if (newQuantity <= 0) return;
 
     const snackExistentInCart = cart.find(
-      (item) => item.id === snack.id && item.snack === snack.snack,
-    )
+      (item) => item.id === snack.id && item.snack === snack.snack
+    );
 
-    if (!snackExistentInCart) return
+    if (!snackExistentInCart) return;
 
     const newCart = cart.map((item) => {
       if (item.id === snackExistentInCart.id && item.snack === snackExistentInCart.snack) {
         return {
           ...item,
           quantity: newQuantity,
-          subtotal: item.price * newQuantity,
-        }
+          subtotal: item.price * newQuantity
+        };
       }
 
-      return item
-    })
+      return item;
+    });
 
-    saveCart(newCart)
+    saveCart(newCart);
   }
 
   function snackCartIncrement(snack: Snack) {
-    updateSnackQuantity(snack, snack.quantity + 1)
+    updateSnackQuantity(snack, snack.quantity + 1);
   }
 
   function snackCartDecrement(snack: Snack) {
-    updateSnackQuantity(snack, snack.quantity - 1)
+    updateSnackQuantity(snack, snack.quantity - 1);
   }
 
   function confirmOrder() {
-    navigate('/payment')
+    navigate('/payment');
   }
 
-  let currentOrderId = 0
+  let lastOrderId = 0;
 
   function generateOrderId() {
-    currentOrderId += 1
-    return currentOrderId
+    lastOrderId += 1;
+    return lastOrderId;
   }
-  
+
   function payOrder(customer: CustomerData) {
-    const orderId = generateOrderId()
-    clearCart()
-    processCheckout(cart, customer)
-    navigate(`/order/success/${orderId}`)
+    const orderId = generateOrderId();
+    clearCart();
+    processCheckout(cart, customer);
+    navigate(`/order/success/${orderId}`);
   }
-  
-  
 
   return (
     <CartContext.Provider
@@ -142,10 +140,10 @@ export function CartProvider({ children }: CartProviderProps) {
         snackCartIncrement,
         snackCartDecrement,
         confirmOrder,
-        payOrder,
+        payOrder
       }}
     >
       {children}
     </CartContext.Provider>
-  )
+  );
 }
