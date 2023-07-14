@@ -21,7 +21,7 @@ export default function OrderSuccessPage() {
         <SubTitle>Dados de Contato da Loja</SubTitle>
 
         <ul>
-          <li>Endereço: Av Central, 123</li>
+          <li>Endereço: Av Mariza, 200</li>
           <li>Tel: 11 98412-4578</li>
         </ul>
 
