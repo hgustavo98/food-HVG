@@ -1,4 +1,4 @@
-import { isValidPhone } from '@brazilian-utils/brazilian-utils';
+import { isValidCNPJ, isValidCPF, isValidPhone } from '@brazilian-utils/brazilian-utils';
 import * as yup from 'yup';
 
 export const schema = yup
@@ -14,6 +14,15 @@ export const schema = yup
       .required('O celular é obrigatório.')
       .transform((value) => value.replace(/[^\d]/g, ''))
       .test('validateMobile', 'O celular inválido.', (value) => isValidPhone(value)),
+      document: yup
+      .string()
+      .required('O CPF/CNPJ é obrigatório.')
+      .transform((value) => value.replace(/[^\d]/g, ''))
+      .test(
+        'validateDocument',
+        'O CPF/CNPJ é inválido.',
+        (value) => isValidCPF(value) || isValidCNPJ(value),
+      ),
     zipCode: yup
       .string()
       .required('O CEP é obrigatório.')

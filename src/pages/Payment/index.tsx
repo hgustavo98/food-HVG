@@ -75,6 +75,25 @@ export default function Payment() {
               />
               {errors.mobile && <p className='error'>{errors.mobile.message}</p>}
             </div>
+            <div className='field'>
+              <label htmlFor='document'>CPF/CNPJ</label>
+              <Controller
+                name='document'
+                control={control}
+                render={({ field }) => (
+                  <IMaskInput
+                    type='text'
+                    id='document'
+                    mask={[
+                      { mask: '000.000.000-00', maxLength: 11 },
+                      { mask: '00.000.000/0000-00' },
+                    ]}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.document && <p className='error'>{errors.document.message}</p>}
+            </div>
           </div>
 
           <h4>Endereço de entrega</h4>
