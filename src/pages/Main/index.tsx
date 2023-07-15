@@ -6,6 +6,7 @@ import { Sidebar } from '../../components/Sidebar'
 import { Container } from './styles'
 
 import logoImg from '../../assets/logo.svg'
+import { Filter } from '../../components/Filter'
 
 export default function Main() {
   return (
@@ -13,6 +14,7 @@ export default function Main() {
       <Sidebar />
       <section>
         <img src={logoImg} />
+        <Filter />
         <Outlet />
       </section>
       <MyOrder />
