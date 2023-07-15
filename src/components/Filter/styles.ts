@@ -6,7 +6,7 @@ export const Container = styled.ul`
   right: 1rem;
   bottom: 0.5rem;
 
-  background: ${({ theme }) => theme.colors.darkgreen};
+  background: ${({ theme }) => theme.colors.red};
   padding: 0.5rem ;
   border-radius: 0.5rem;
 
@@ -16,7 +16,7 @@ export const Container = styled.ul`
   transition: background 0.3s;
 
   &:hover {
-    ${({ theme }) => theme.colors.darkgreen};
+    ${({ theme }) => theme.colors.red};
   }
 
   span:first-child {
@@ -51,7 +51,7 @@ export const Container = styled.ul`
 export const Button = styled.li`
   cursor: pointer;
   /* Estilos do botão... */
-    background: ${({ theme }) => theme.colors.darkgreen};;
+    background: ${({ theme }) => theme.colors.red};;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     display: flex;
@@ -59,7 +59,7 @@ export const Button = styled.li`
     transition: background 0.3s;
 
     &:hover {
-      background: ${({ theme }) => theme.colors.darkgreen};
+      background: ${({ theme }) => theme.colors.red};
   }
 
 
@@ -74,7 +74,7 @@ export const Button = styled.li`
 
 export const Option = styled.li`
 
-  background: ${({ theme }) => theme.colors.darkgreen};
+  background: ${({ theme }) => theme.colors.red};
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     display: flex;
