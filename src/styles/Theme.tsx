@@ -12,11 +12,10 @@ export const theme: DefaultTheme = {
   colors: {
     white: '#FFFFFF',
     black: '#0C0D0F',
-    red: '#E03131',
+    red: '#08440d',
     orange: '#E8590C',
     yellow: '#FCC419',
     green: '#23DB42',
-    darkgreen: '#115722',
     teal: '#89DD13',
     cyan: '#3BC9DB',
     blue: '#25BEFF',

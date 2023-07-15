@@ -7,7 +7,7 @@ export const Container = styled(Link)`
   right: 1.5rem;
   bottom: 0.5rem;
 
-  background: ${({ theme }) => theme.colors.darkgreen};
+  background: ${({ theme }) => theme.colors.red};
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
 

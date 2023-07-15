@@ -1,29 +1,30 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { IMaskInput } from 'react-imask';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { IMaskInput } from 'react-imask'
 
-import { CustomerData } from '../../interfaces/CustomerData';
+import { CustomerData } from '../../interfaces/CustomerData'
 
-import { Head } from '../../components/Head';
-import { PayOrder } from '../../components/OrderCloseAction/PayOrder';
-import { OrderHeader } from '../../components/OrderHeader';
+import { Head } from '../../components/Head'
+import { PayOrder } from '../../components/OrderCloseAction/PayOrder'
+import { OrderHeader } from '../../components/OrderHeader'
 
-import { useCart } from '../../hooks/useCart';
+import { useCart } from '../../hooks/useCart'
 
-import { FieldValues, schema } from './validationSchema';
+import { FieldValues, schema } from './validationSchema'
 
-import { Container, Form, Inner } from './styles';
+import IMask from 'imask'
+import { Container, Form, Inner } from './styles'
 
 export default function Payment() {
-  const { payOrder } = useCart();
+  const { payOrder } = useCart()
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FieldValues>({
     resolver: yupResolver(schema),
-  });
-  const onSubmit: SubmitHandler<FieldValues> = (data) => payOrder(data as CustomerData);
+  })
+  const onSubmit: SubmitHandler<FieldValues> = (data) => payOrder(data as CustomerData)
 
   return (
     <Container>
@@ -75,6 +76,7 @@ export default function Payment() {
               />
               {errors.mobile && <p className='error'>{errors.mobile.message}</p>}
             </div>
+
             <div className='field'>
               <label htmlFor='document'>CPF/CNPJ</label>
               <Controller
@@ -211,9 +213,100 @@ export default function Payment() {
             </div>
           </div>
 
-          <PayOrder />
+          <h4>Pagamento</h4>
+
+          <div className='field'>
+            <label htmlFor='creditCardNumber'>Número do cartão</label>
+            <Controller
+              name='creditCardNumber'
+              control={control}
+              render={({ field }) => (
+                <IMaskInput
+                  type='text'
+                  id='creditCardNumber'
+                  mask={[
+                    {
+                      mask: '0000 000000 0000',
+                      maxLength: 14,
+                    },
+                    {
+                      mask: '0000 000000 00000',
+                      maxLength: 15,
+                    },
+                    {
+                      mask: '0000 0000 0000 0000',
+                    },
+                  ]}
+                  {...field}
+                />
+              )}
+            />
+            {errors.creditCardNumber && <p className='error'>{errors.creditCardNumber.message}</p>}
+          </div>
+
+          <div className='field'>
+            <label htmlFor='creditCardHolder'>Nome impresso no cartão</label>
+            <Controller
+              name='creditCardHolder'
+              control={control}
+              render={({ field }) => <input type='text' id='creditCardHolder' {...field} />}
+            />
+            {errors.creditCardHolder && <p className='error'>{errors.creditCardHolder.message}</p>}
+          </div>
+
+          <div className='grouped'>
+            <div className='field'>
+              <label htmlFor='creditCardExpiration'>Validade (MM/AA)</label>
+              <Controller
+                name='creditCardExpiration'
+                control={control}
+                render={({ field }) => (
+                  <IMaskInput
+                    type='text'
+                    id='creditCardExpiration'
+                    mask={[
+                      {
+                        mask: 'MM/YY',
+                        blocks: {
+                          MM: {
+                            mask: IMask.MaskedRange,
+                            from: 1,
+                            to: 12,
+                          },
+                          YY: {
+                            mask: IMask.MaskedRange,
+                            from: new Date().getFullYear() - 2000,
+                            to: 99,
+                          },
+                        },
+                      },
+                    ]}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.creditCardExpiration && (
+                <p className='error'>{errors.creditCardExpiration.message}</p>
+              )}
+            </div>
+
+            <div className='field'>
+              <label htmlFor='creditCardSecurityCode'>Código de segurança (CVV)</label>
+              <Controller
+                name='creditCardSecurityCode'
+                control={control}
+                render={({ field }) => (
+                  <IMaskInput type='text' id='creditCardSecurityCode' mask={'0000'} {...field} />
+                )}
+              />
+              {errors.creditCardSecurityCode && (
+                <p className='error'>{errors.creditCardSecurityCode.message}</p>
+              )}
+            </div>
+          </div>
+          <PayOrder/>
         </Form>
       </Inner>
     </Container>
-  );
+  )
 }

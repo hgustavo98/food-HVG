@@ -5,7 +5,7 @@ interface ContainerProps {
 }
 
 export const Container = styled.aside<ContainerProps>`
-  background-color: ${({ theme }) => theme.colors.darkgreen};
+  background-color: ${({ theme }) => theme.colors.red};
 
   ${({ isMenuOpen }) =>
     isMenuOpen

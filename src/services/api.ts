@@ -29,7 +29,14 @@ export const processCheckout = (cart: Snack[], customer: CustomerData) =>
       city: customer.city,
       state: customer.state,
     },
-
+    payment: {
+      creditCardNumber: customer.creditCardNumber,
+      creditCardHolder: customer.creditCardHolder,
+      creditCardExpiration: `${new Date(customer.creditCardExpiration).getMonth() + 1}/${new Date(
+        customer.creditCardExpiration,
+      ).getFullYear()}`,
+      creditCardSecurityCode: customer.creditCardSecurityCode,
+    },
   })
 
 export default api

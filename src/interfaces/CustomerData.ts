@@ -10,5 +10,8 @@ export interface CustomerData {
   neighborhood: string
   city: string
   state: string
-
+  creditCardNumber: string
+  creditCardHolder: string
+  creditCardExpiration: string
+  creditCardSecurityCode: string
 }

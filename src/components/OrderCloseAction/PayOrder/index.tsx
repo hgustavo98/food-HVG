@@ -11,11 +11,10 @@ export function PayOrder() {
 
   return (
     <Container>
-      <button type='submit'>Realizar Pedido</button>
+      <button type='submit'>Pagar</button>
       <span>
         Total <strong>{currencyFormat(totalAmount)}</strong>
       </span>
     </Container>
   )
 }
-

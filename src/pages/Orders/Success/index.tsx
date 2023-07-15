@@ -22,7 +22,7 @@ export default function OrderSuccessPage() {
 
         <ul>
           <li>Endereço: Av Mariza, 200</li>
-          <li>Tel: 11 98412-4578</li>
+          <li>Tel: 31 3741-1078</li>
         </ul>
 
         <br />
