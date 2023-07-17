@@ -18,3 +18,5 @@ export function PayOrder() {
     </Container>
   )
 }
+
+export default PayOrder

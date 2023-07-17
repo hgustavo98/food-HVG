@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { darken } from 'polished'
 
 export const Container = styled.ul`
+  cursor: pointer;
   right: 1rem;
   bottom: 0.5rem;
 
