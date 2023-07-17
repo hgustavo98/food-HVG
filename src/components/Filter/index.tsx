@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+// Filter.js
+import React from 'react';
 import { Container, Button, Option } from './styles';
+import { useFilter } from '../../contexts/FilterContext';
 
-interface FilterProps {
-  onOptionChange: (option: string | null) => void;
-}
-
-export function Filter({ onOptionChange }: FilterProps) {
-  const [showOptions, setShowOptions] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+export function Filter() {
+  const { showOptions, setShowOptions, selectedOption, setSelectedOption } = useFilter();
 
   const handleButtonClick = () => {
     setShowOptions(!showOptions);
@@ -23,7 +20,7 @@ export function Filter({ onOptionChange }: FilterProps) {
 
   const handleApplyFilter = () => {
     setShowOptions(false);
-    onOptionChange(selectedOption); // Chamando a função com o valor selecionado
+    // Você pode fazer alguma ação aqui com a opção selecionada, se necessário
   };
 
   return (
