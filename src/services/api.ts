@@ -8,11 +8,11 @@ const api = axios.create({
 
 
 
+export const getBurgers = (filter: string | null) => api.get<SnackData[]>(`/snacks/${filter}?snack=burger`);
+export const getPizzas = (filter: string | null) => api.get<SnackData[]>(`/snacks/${filter}?snack=pizza`);
+export const getDrinks = (filter: string | null) => api.get<SnackData[]>(`/snacks/${filter}?snack=drink`);
+export const getIceCreams = (filter: string | null) => api.get<SnackData[]>(`/snacks/${filter}?snack=ice-cream`);
 
-export const getBurgers = () => api.get<SnackData[]>(`/snacks?snack=burger`)
-export const getPizzas = () => api.get<SnackData[]>('/snacks?snack=pizza')
-export const getDrinks = () => api.get<SnackData[]>('/snacks?snack=drink')
-export const getIceCreams = () => api.get<SnackData[]>('/snacks?snack=ice-cream')
 
 
 

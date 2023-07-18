@@ -1,10 +1,14 @@
 // Filter.js
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Container, Button, Option } from './styles';
-import { useFilter } from '../../contexts/FilterContext';
+import { SnackContext } from '../../contexts/SnackContext';
 
 export function Filter() {
-  const { showOptions, setShowOptions, selectedOption, setSelectedOption } = useFilter();
+  const snackContext = useContext(SnackContext);
+  const { selectedOption, setSelectedOption } = snackContext;
+
+  const [showOptions, setShowOptions] = useState(false); // Adicione essa linha
+
 
   const handleButtonClick = () => {
     setShowOptions(!showOptions);
@@ -22,6 +26,8 @@ export function Filter() {
     setShowOptions(false);
     // Você pode fazer alguma ação aqui com a opção selecionada, se necessário
   };
+
+  console.log(selectedOption);
 
   return (
     <Container>
@@ -45,7 +51,7 @@ export function Filter() {
             <span>Menor valor</span>
             {selectedOption === 'menor' && <span>&#10003;</span>}
           </Option>
-          <Button onClick={handleApplyFilter}><span>Aplicar</span></Button>
+          <Button onClick={handleApplyFilter}><span>X</span></Button>
         </>
       )}
     </Container>

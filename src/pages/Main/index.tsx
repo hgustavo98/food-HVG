@@ -7,6 +7,7 @@ import { Container } from './styles'
 import { FilterProvider } from '../../contexts/FilterContext'
 import logoImg from '../../assets/logo.svg'
 import { Filter } from '../../components/Filter'
+import { SnackProvider } from '../../contexts/SnackContext'
 
 export default function Main() {
   // Função para lidar com a mudança de opção
@@ -14,6 +15,7 @@ export default function Main() {
 
   return (
     <FilterProvider>
+      <SnackProvider>
     <Container>
       <Sidebar />
       <section>
@@ -23,6 +25,7 @@ export default function Main() {
       </section>
       <MyOrder />
     </Container>
+    </SnackProvider>
     </FilterProvider>
   )
 }

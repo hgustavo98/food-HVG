@@ -1,4 +1,3 @@
-// FilterContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface FilterContextProps {
@@ -6,6 +5,8 @@ interface FilterContextProps {
   setShowOptions: React.Dispatch<React.SetStateAction<boolean>>;
   selectedOption: string | null;
   setSelectedOption: React.Dispatch<React.SetStateAction<string | null>>;
+  filter: string | null; // Adicione a propriedade filter
+  setFilter: React.Dispatch<React.SetStateAction<string | null>>; // Adicione a propriedade setFilter
 }
 
 export const FilterContext = createContext<FilterContextProps | undefined>(undefined);
@@ -21,6 +22,7 @@ export function useFilter() {
 export function FilterProvider({ children }: { children: ReactNode }) {
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [filter, setFilter] = useState<string | null>(null); // Inicialize o estado do filtro
 
   return (
     <FilterContext.Provider
@@ -29,6 +31,8 @@ export function FilterProvider({ children }: { children: ReactNode }) {
         setShowOptions,
         selectedOption,
         setSelectedOption,
+        filter, // Adicione o filtro ao contexto
+        setFilter, // Adicione a função setFilter ao contexto
       }}
     >
       {children}
