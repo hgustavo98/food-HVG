@@ -1,37 +1,35 @@
-// Filter.js
-import React, { useContext, useState } from 'react';
-import { Container, Button, Option } from './styles';
-import { SnackContext } from '../../contexts/SnackContext';
+import React, { useContext, useState } from 'react'
+import { Container, Button, Option } from './styles'
+import { SnackContext } from '../../contexts/SnackContext'
 
 export function Filter() {
-  const snackContext = useContext(SnackContext);
-  const { selectedOption, setSelectedOption } = snackContext;
+  const snackContext = useContext(SnackContext)
+  const { selectedOption, setSelectedOption } = snackContext
 
-  const [showOptions, setShowOptions] = useState(false); // Adicione essa linha
-
+  const [showOptions, setShowOptions] = useState(false)
 
   const handleButtonClick = () => {
-    setShowOptions(!showOptions);
-  };
+    setShowOptions(!showOptions)
+  }
 
   const handleOptionClick = (option: string) => {
     if (selectedOption === option) {
-      setSelectedOption(null); // Desmarcar o botão se ele já estiver selecionado
+      setSelectedOption(null) // Desmarcar o botão se ele já estiver selecionado
     } else {
-      setSelectedOption(option);
+      setSelectedOption(option)
     }
-  };
+  }
 
   const handleApplyFilter = () => {
-    setShowOptions(false);
+    setShowOptions(false)
     // Você pode fazer alguma ação aqui com a opção selecionada, se necessário
-  };
+  }
 
-  console.log(selectedOption);
+  console.log(selectedOption)
 
   return (
     <Container>
-      <Button onClick={handleButtonClick}>
+      <Button onClick={handleButtonClick} className={showOptions ? 'active' : ''}>
         <span>Ordenar</span>
         {showOptions ? <span>&#9650;</span> : <span>&#9660;</span>}
       </Button>
@@ -41,19 +39,21 @@ export function Filter() {
             onClick={() => handleOptionClick('maior')}
             className={selectedOption === 'maior' ? 'selected' : ''}
           >
-            <span>Maior valor</span>
+            Maior valor
             {selectedOption === 'maior' && <span>&#10003;</span>}
           </Option>
           <Option
             onClick={() => handleOptionClick('menor')}
             className={selectedOption === 'menor' ? 'selected' : ''}
           >
-            <span>Menor valor</span>
+            Menor valor
             {selectedOption === 'menor' && <span>&#10003;</span>}
           </Option>
-          <Button onClick={handleApplyFilter}><span>X</span></Button>
+          <Button onClick={handleApplyFilter} className='apply-button'>
+            fechar
+          </Button>
         </>
       )}
     </Container>
-  );
+  )
 }
