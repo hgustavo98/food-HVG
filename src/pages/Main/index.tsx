@@ -8,6 +8,7 @@ import { FilterProvider } from '../../contexts/FilterContext'
 import logoImg from '../../assets/logo.svg'
 import { Filter } from '../../components/Filter'
 import { SnackProvider } from '../../contexts/SnackContext'
+import { Mystatus } from '../../components/Status'
 
 export default function Main() {
   // Função para lidar com a mudança de opção
@@ -19,12 +20,16 @@ export default function Main() {
     <Container>
       <Sidebar />
       <section>
-        <img src={logoImg} />
+        <img src={logoImg} />  <Mystatus/>
+
         <Filter/>
+
         <Outlet />
+
       </section>
       <MyOrder />
     </Container>
+
     </SnackProvider>
     </FilterProvider>
   )
