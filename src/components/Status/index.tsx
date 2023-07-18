@@ -3,7 +3,7 @@ import { Container } from './styles'
 
 export function Mystatus() {
   return (
-    <Container to={''}>
+    <Container to={'status'}>
       <span>Status</span>
 
     </Container>

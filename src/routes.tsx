@@ -5,7 +5,7 @@ import BurgersPage from './pages/Main/Burgers'
 import DrinksPage from './pages/Main/Drinks'
 import IceCreamsPage from './pages/Main/IceCreams'
 import PizzasPage from './pages/Main/Pizzas'
-
+import StatusPage from './pages/Status'
 import MyCartPage from './pages/MyCart'
 import OrderSuccessPage from './pages/Orders/Success'
 import PaymentPage from './pages/Payment'
@@ -21,8 +21,10 @@ export function AppRoutes() {
       </Route>
       <Route path='cart' element={<MyCartPage />} />
       <Route path='payment' element={<PaymentPage />} />
+      <Route path='status' element={<StatusPage />} />
       <Route path='order'>
         <Route path='success/:orderId' element={<OrderSuccessPage />} />
+
       </Route>
     </Routes>
   )
