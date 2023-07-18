@@ -15,7 +15,7 @@ export const Container = styled.div`
     position: relative;
     background: ${({ theme }) => theme.colors.black};
     padding: 1.75rem 1.5rem;
-    border-radius: 4px;
+    border-radius: 20px;
 
     span {
       position: absolute;
