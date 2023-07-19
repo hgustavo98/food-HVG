@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { CustomerData } from '../interfaces/CustomerData';
 import { Snack } from '../interfaces/Snack';
@@ -22,25 +23,25 @@ export const getIceCreams = (filter: string | null) =>
 // Novas requisições:
 
 // Rota para obter os nomes dos lanches (snackName) e os nomes dos clientes (customerName) para os itens de pedidos pagos
-export const getPaidOrders = () => api.get<unknown>('/paid-orders');
+export const getPaidOrders = () => api.get<any>('/paid-orders');
 
 // Rota para obter todos os pedidos de um cliente específico (orderId, status, total, snackName, snackPrice).
-export const getCustomerOrders = (customerId: number) => api.get<unknown>(`/customer-orders/${customerId}`);
+export const getCustomerOrders = (customerId: number) => api.get<any>(`/customer-orders/${customerId}`);
 
 // Rota para obter os itens de pedido por orderId
-export const getOrderItems = (orderId: number) => api.get<unknown>(`/order-items/${orderId}`);
+export const getOrderItems = (orderId: number) => api.get<any>(`/order-items/${orderId}`);
 
 // Rota para obter os pedidos com itens com quantidade maior que 2 e inclui informações do cliente e dos lanches (customerName, totalSpent, snackName, snackPrice).
-export const getOrdersWithItemsQuantityGreaterThan2 = () => api.get<unknown>('/orders-with-items-quantity-greater-than-2');
+export const getOrdersWithItemsQuantityGreaterThan2 = () => api.get<any>('/orders-with-items-quantity-greater-than-2');
 
 // Rota para obter o valor total gasto por cada cliente e inclui informações sobre os itens de pedidos e os lanches.
-export const getCustomersTotalSpent = () => api.get<unknown>('/customers-total-spent');
+export const getCustomersTotalSpent = () => api.get<any>('/customers-total-spent');
 
 // Rota para obter o valor total gasto por um cliente específico (customerTotalSpent).
-export const getCustomerTotalSpent = (customerId: number) => api.get<unknown>(`/customer-total-spent/${customerId}`);
+export const getCustomerTotalSpent = (customerId: number) => api.get<any>(`/customer-total-spent/${customerId}`);
 
 // Rota para obter o número total de itens em pedidos de um cliente (customerTotalItems).
-export const getCustomerTotalItems = (customerId: number) => api.get<unknown>(`/customer-total-items/${customerId}`);
+export const getCustomerTotalItems = (customerId: number) => api.get<any>(`/customer-total-items/${customerId}`);
 
 export const processCheckout = (cart: Snack[], customer: CustomerData) =>
   api.post('/checkout', {
