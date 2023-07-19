@@ -21,45 +21,35 @@ export default function StatusPage() {
   const handleButtonClick = async (action: string) => {
     try {
       let response;
-      switch (action) {
-        case 'getPaidOrders':
-          response = await getPaidOrders();
-          break;
-        case 'getCustomerOrders':
-          response = await getCustomerOrders(Number(customerId));
-          break;
-        case 'getOrderItems':
-          response = await getOrderItems(Number(customerId));
-          break;
-        case 'getOrdersWithItemsQuantityGreaterThan2':
-          response = await getOrdersWithItemsQuantityGreaterThan2();
-          break;
-        case 'getCustomersTotalSpent':
-          response = await getCustomersTotalSpent();
-          break;
-        case 'getCustomerTotalSpent':
-          response = await getCustomerTotalSpent(Number(customerId));
-          break;
-        case 'getCustomerTotalItems':
-          response = await getCustomerTotalItems(Number(customerId));
-          break;
-          case 'getMonthlySales':
-            response = await getMonthlySales();
-            break;
-            case 'getOrdersByCustomer':
-              response = await getOrdersByCustomer();
-              break;
-              case 'getSalesBySnack':
-                response = await getSalesBySnack();
-                break;
-        default:
-          response = { data: 'Ação inválida' };
+      if (action === 'getCustomerOrders') {
+        response = await getCustomerOrders(Number(customerId));
+      } else if (action === 'getOrderItems') {
+        response = await getOrderItems(Number(customerId));
+      } else if (action === 'getCustomerTotalSpent') {
+        response = await getCustomerTotalSpent(Number(customerId));
+      } else if (action === 'getCustomerTotalItems') {
+        response = await getCustomerTotalItems(Number(customerId));
+      } else if (action === 'getPaidOrders') {
+        response = await getPaidOrders();
+      } else if (action === 'getOrdersWithItemsQuantityGreaterThan2') {
+        response = await getOrdersWithItemsQuantityGreaterThan2();
+      } else if (action === 'getCustomersTotalSpent') {
+        response = await getCustomersTotalSpent();
+      } else if (action === 'getMonthlySales') {
+        response = await getMonthlySales();
+      } else if (action === 'getOrdersByCustomer') {
+        response = await getOrdersByCustomer();
+      } else if (action === 'getSalesBySnack') {
+        response = await getSalesBySnack();
+      } else {
+        response = { data: 'Ação inválida' };
       }
       setConsoleOutput(JSON.stringify(response.data, null, 2));
     } catch (error) {
       setConsoleOutput(JSON.stringify(error, null, 2));
     }
   };
+
 
   return (
     <Container>
