@@ -1,74 +1,53 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Head } from '../../components/Head';
-import { Container, Inner, SubTitle, Title, Table } from './styled';
+import { Container, Inner, SubTitle, Title } from './styled';
+import {
+  getPaidOrders,
+  getCustomerOrders,
+  getOrderItems,
+  getOrdersWithItemsQuantityGreaterThan2,
+  getCustomersTotalSpent,
+  getCustomerTotalSpent,
+  getCustomerTotalItems,
+} from '../../services/api';
 
 export default function StatusPage() {
-  // Dados simulados das consultas e resultados (substitua por dados reais da sua API)
-  const consultasEResultados = [
-    {
-      descricao: 'Consulta 1: Descrição da Consulta 1',
-      comando_sql: 'SELECT nome_produto, SUM(quantidade) AS total_quantidade FROM produtos WHERE preco > 100 GROUP BY nome_produto ORDER BY total_quantidade DESC;',
-      resultado: [
-        { nome_produto: 'Smartphone', total_quantidade: 230 },
-        { nome_produto: 'Notebook', total_quantidade: 120 },
-        { nome_produto: 'Smart TV', total_quantidade: 80 },
-      ]
-    },
-    {
-      descricao: 'Consulta 2: Descrição da Consulta 2',
-      comando_sql: 'SELECT nome_cliente, COUNT(id) AS total_pedidos FROM pedidos GROUP BY nome_cliente;',
-      resultado: [
-        { nome_cliente: 'João', total_pedidos: 10 },
-        { nome_cliente: 'Maria', total_pedidos: 8 },
-        { nome_cliente: 'Pedro', total_pedidos: 5 },
-      ]
-    },
-    // Adicione mais consultas aqui
-  ];
+  const [consoleOutput, setConsoleOutput] = useState('');
+  const [customerId, setCustomerId] = useState('');
 
-  // Estado para controlar qual consulta está sendo exibida
-  const [currentConsulta, setCurrentConsulta] = useState(0);
-
-  // Estado para controlar a exibição do comando SQL
-  const [showSQL, setShowSQL] = useState(false);
-
-  // Função para avançar para a próxima consulta
-  const handleNextConsulta = () => {
-    setCurrentConsulta((prevConsulta) => (prevConsulta + 1) % consultasEResultados.length);
-  };
-
-  // Função para voltar para a consulta anterior
-  const handlePrevConsulta = () => {
-    setCurrentConsulta((prevConsulta) => (prevConsulta - 1 + consultasEResultados.length) % consultasEResultados.length);
-  };
-
-  const consultaAtual = consultasEResultados[currentConsulta];
-
-  // Função para renderizar os cabeçalhos da tabela
-  const renderTableHeaders = () => {
-    if (consultaAtual.resultado.length === 0) {
-      return null;
+  // Função para fazer a chamada da API e exibir o resultado
+  const handleButtonClick = async (action: string) => {
+    try {
+      let response;
+      switch (action) {
+        case 'getPaidOrders':
+          response = await getPaidOrders();
+          break;
+        case 'getCustomerOrders':
+          response = await getCustomerOrders(Number(customerId));
+          break;
+        case 'getOrderItems':
+          response = await getOrderItems(Number(customerId));
+          break;
+        case 'getOrdersWithItemsQuantityGreaterThan2':
+          response = await getOrdersWithItemsQuantityGreaterThan2();
+          break;
+        case 'getCustomersTotalSpent':
+          response = await getCustomersTotalSpent();
+          break;
+        case 'getCustomerTotalSpent':
+          response = await getCustomerTotalSpent(Number(customerId));
+          break;
+        case 'getCustomerTotalItems':
+          response = await getCustomerTotalItems(Number(customerId));
+          break;
+        default:
+          response = { data: 'Ação inválida' };
+      }
+      setConsoleOutput(JSON.stringify(response.data, null, 2));
+    } catch (error) {
+      setConsoleOutput(JSON.stringify(error, null, 2));
     }
-
-    const headers = Object.keys(consultaAtual.resultado[0]);
-    return (
-      <tr>
-        {headers.map((header, index) => (
-          <th key={index}>{header}</th>
-        ))}
-      </tr>
-    );
-  };
-
-  // Função para renderizar os dados da tabela
-  const renderTableData = () => {
-    return consultaAtual.resultado.map((item, index) => (
-      <tr key={index}>
-        {Object.values(item).map((value, index) => (
-          <td key={index}>{value}</td>
-        ))}
-      </tr>
-    ));
   };
 
   return (
@@ -78,34 +57,54 @@ export default function StatusPage() {
       <Inner>
         <Title>Consultas SQL e Resultados</Title>
 
-        <div>
-          <button onClick={handlePrevConsulta}>Anterior</button>
-          <button onClick={handleNextConsulta}>Próxima</button>
+        <SubTitle>Consultas</SubTitle>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {/* Esquerda: Campo para inserir o ID e botões que precisam dele */}
+          <div style={{ marginRight: '20px' }}>
+            <div>
+              <label htmlFor="customerIdInput">Insira o ID:</label>
+              <input
+                type="text"
+                id="customerIdInput"
+                value={customerId}
+                onChange={(e) => setCustomerId(e.target.value)}
+              />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button onClick={() => handleButtonClick('getCustomerOrders')}>Obter Pedidos do Cliente</button>
+              <button onClick={() => handleButtonClick('getOrderItems')}>Obter Itens do Pedido</button>
+              <button onClick={() => handleButtonClick('getCustomerTotalSpent')}>
+                Obter Gasto Total de um Cliente
+              </button>
+              <button onClick={() => handleButtonClick('getCustomerTotalItems')}>
+                Obter Total de Itens de um Cliente
+              </button>
+            </div>
+          </div>
+
+          {/* Direita: Botões que não precisam do ID */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button onClick={() => handleButtonClick('getPaidOrders')}>Obter Pedidos Pagos</button>
+            <button onClick={() => handleButtonClick('getOrdersWithItemsQuantityGreaterThan2')}>
+              Obter Pedidos com mais de 2 Itens
+            </button>
+            <button onClick={() => handleButtonClick('getCustomersTotalSpent')}>
+              Obter Gastos Totais dos Clientes
+            </button>
+          </div>
         </div>
 
-        <SubTitle>{consultaAtual.descricao}</SubTitle>
-        <button onClick={() => setShowSQL(!showSQL)}>Mostrar Comando SQL</button>
-        {showSQL && (
-          <p>
-            <strong>Comando SQL:</strong>
-            <code>{consultaAtual.comando_sql}</code>
-          </p>
-        )}
-        <p>
-          <strong>Resultado:</strong>
-          <Table>
-            <thead>
-              {renderTableHeaders()}
-            </thead>
-            <tbody>
-              {renderTableData()}
-            </tbody>
-          </Table>
-        </p>
+        {/* Exibir o resultado para cada requisição */}
+        <div>
+          <h3>Resultado:</h3>
+          <pre>{consoleOutput}</pre>
+        </div>
 
         <br />
         <a href='/'>Voltar para a página inicial</a>
       </Inner>
     </Container>
-  )
+  );
 }
