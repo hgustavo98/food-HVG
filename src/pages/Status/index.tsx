@@ -8,7 +8,9 @@ import {
   getOrdersWithItemsQuantityGreaterThan2,
   getCustomersTotalSpent,
   getCustomerTotalSpent,
-  getCustomerTotalItems,
+  getCustomerTotalItems,getMonthlySales,
+  getOrdersByCustomer,
+  getSalesBySnack,
 } from '../../services/api';
 
 export default function StatusPage() {
@@ -41,6 +43,15 @@ export default function StatusPage() {
         case 'getCustomerTotalItems':
           response = await getCustomerTotalItems(Number(customerId));
           break;
+          case 'getMonthlySales':
+            response = await getMonthlySales();
+            break;
+            case 'getOrdersByCustomer':
+              response = await getOrdersByCustomer();
+              break;
+              case 'getSalesBySnack':
+                response = await getSalesBySnack();
+                break;
         default:
           response = { data: 'Ação inválida' };
       }
@@ -72,7 +83,7 @@ export default function StatusPage() {
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
               <button onClick={() => handleButtonClick('getCustomerOrders')}>Obter Pedidos do Cliente</button>
               <button onClick={() => handleButtonClick('getOrderItems')}>Obter Itens do Pedido</button>
               <button onClick={() => handleButtonClick('getCustomerTotalSpent')}>
@@ -85,14 +96,19 @@ export default function StatusPage() {
           </div>
 
           {/* Direita: Botões que não precisam do ID */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
             <button onClick={() => handleButtonClick('getPaidOrders')}>Obter Pedidos Pagos</button>
             <button onClick={() => handleButtonClick('getOrdersWithItemsQuantityGreaterThan2')}>
               Obter Pedidos com mais de 2 Itens
             </button>
-            <button onClick={() => handleButtonClick('getCustomersTotalSpent')}>
-              Obter Gastos Totais dos Clientes
-            </button>
+            <button onClick={() => handleButtonClick('getCustomersTotalSpent')}> Obter Gastos Totais dos Clientes  </button>
+            <h2>Relatórios</h2>
+              <button onClick={() => handleButtonClick('getMonthlySales')}>Relatório de Vendas Mensais</button>
+              <button onClick={() => handleButtonClick('getOrdersByCustomer')}>Relatório de Pedidos por Cliente</button>
+              <button onClick={() => handleButtonClick('getSalesBySnack')}>Relatório de Vendas por Lanche</button>
+
+
+
           </div>
         </div>
 

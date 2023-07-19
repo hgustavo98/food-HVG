@@ -43,6 +43,14 @@ export const getCustomerTotalSpent = (customerId: number) => api.get<any>(`/cust
 // Rota para obter o número total de itens em pedidos de um cliente (customerTotalItems).
 export const getCustomerTotalItems = (customerId: number) => api.get<any>(`/customer-total-items/${customerId}`);
 
+//Relatório de Vendas Mensais
+export const getMonthlySales = () => api.get<any>('/report-monthly-sales');
+//Relatório de Pedidos Realizados por Cliente
+export const getOrdersByCustomer = () => api.get<any>('/report-orders-by-customer');
+//Relatório de Vendas Totais por Lanche
+export const getSalesBySnack = () => api.get<any>('/report-sales-by-snack');
+
+
 export const processCheckout = (cart: Snack[], customer: CustomerData) =>
   api.post('/checkout', {
     cart,
