@@ -151,9 +151,9 @@ export default function StatusPage() {
       <Head title='Status' />
 
       <Inner>
-        <Title>Consultas SQL e Resultados</Title>
+        <Title>Painel de Admin</Title>
 
-        <SubTitle>Consultas</SubTitle>
+        <SubTitle>Consultas SQL e Resultados</SubTitle>
 
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Esquerda: Campo para inserir o ID e botões que precisam dele */}
