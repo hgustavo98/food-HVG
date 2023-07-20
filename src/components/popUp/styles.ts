@@ -56,7 +56,7 @@ export const Container = styled.button`
 `
 export const PopupContent = styled.div`
   position: fixed;
-  top: 30%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: ${({ theme }) => theme.colors.black};
