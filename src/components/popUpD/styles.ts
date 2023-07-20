@@ -5,10 +5,13 @@ import styled from 'styled-components'
 
 export const Container = styled.button`
   position: fixed;
-  top: 1.5rem;
+  top: 5rem;
   right: 3rem;
   cursor: pointer;
   border: none;
+  overflow: auto;
+  margin: 0; /* Remova qualquer margem padrão do body para evitar espaçamento indesejado */
+  padding: 0;
 
   background: ${({ theme }) => theme.colors.black};
   padding: 0.5rem 1rem;
@@ -48,7 +51,7 @@ export const Container = styled.button`
   }
 
   @media (max-width: 720px) {
-    top: 4rem;
+    top: 1rem;
     right: initial;
     left: 1.5rem;
   }
@@ -56,15 +59,17 @@ export const Container = styled.button`
 `
 export const PopupContent = styled.div`
   position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 41%;
+  left: 60%;
+  transform: translate(-75%, -50%);
   background-color: ${({ theme }) => theme.colors.black};
   padding: 20px;
   text-align: left;
   white-space: pre-wrap;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: auto;
+  max-height: 80vh;
 
   /* Adicione a propriedade z-index */
   z-index: 9999;
@@ -98,6 +103,11 @@ export const PopupContent = styled.div`
   }
 
 
+  @media (max-width: 768px) {
+    /* Estilos aplicados quando a largura da tela é menor ou igual a 768px (tamanho de um dispositivo tablet ou smartphone) */
+    font-size: 0.9rem;
+  }
+
 
 `;
 
@@ -109,5 +119,13 @@ export const CloseButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   margin-top: 16px;
+
+  @media (max-width: 768px) {
+    /* Estilos aplicados quando a largura da tela é menor ou igual a 768px (tamanho de um dispositivo tablet ou smartphone) */
+    font-size: 0.9rem;
+    padding: 8px 12px;
+
+  }
+
 `;
 

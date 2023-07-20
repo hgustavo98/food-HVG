@@ -28,6 +28,7 @@ import {
 } from './/type';
 import { PopUpadm } from '../../components/popUpadm';
 import { HtmlB } from '../../components/popUpAv';
+import { PopUpD } from '../../components/popUpD';
 
 
 export default function StatusPage() {
@@ -153,7 +154,10 @@ export default function StatusPage() {
       <Head title='Status' />
 
       <Inner>
-        <PopUpadm></PopUpadm> <HtmlB></HtmlB>
+
+        <PopUpadm/>
+        <HtmlB/><PopUpD/>
+
         <Title>Painel de Admin</Title>
 
         <SubTitle>Consultas SQL e Resultados</SubTitle>
