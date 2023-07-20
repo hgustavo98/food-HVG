@@ -9,6 +9,7 @@ import logoImg from '../../assets/logo.svg'
 import { Filter } from '../../components/Filter'
 import { SnackProvider } from '../../contexts/SnackContext'
 import { Mystatus } from '../../components/Status'
+import { PopUp } from '../../components/popUp'
 
 export default function Main() {
   // Função para lidar com a mudança de opção
@@ -22,7 +23,7 @@ export default function Main() {
       <section>
         <img src={logoImg} />  <Mystatus/>
 
-        <Filter/>
+        <Filter/> <><PopUp></PopUp></>
 
         <Outlet />
 
