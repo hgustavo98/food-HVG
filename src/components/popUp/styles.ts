@@ -6,7 +6,7 @@ import styled from 'styled-components'
 export const Container = styled.button`
   position: fixed;
   top: 5rem;
-  right: 1.5rem;
+  right: 3rem;
   cursor: pointer;
   border: none;
 
@@ -48,7 +48,7 @@ export const Container = styled.button`
   }
 
   @media (max-width: 720px) {
-    top: 0.5rem;
+    top: 4rem;
     right: initial;
     left: 1.5rem;
   }
@@ -56,7 +56,7 @@ export const Container = styled.button`
 `
 export const PopupContent = styled.div`
   position: fixed;
-  top: 20%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: ${({ theme }) => theme.colors.black};

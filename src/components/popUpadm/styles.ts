@@ -53,7 +53,7 @@ export const Container = styled.button`
   @media (max-width: 720px) {
     top: 0.5rem;
     right: initial;
-    left: 1.5rem;
+    left: 23rem;
   }
 
 `

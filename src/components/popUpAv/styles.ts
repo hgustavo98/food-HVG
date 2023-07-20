@@ -1,14 +1,18 @@
 import { darken } from 'polished'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-export const Container = styled(Link)`
+export const Container = styled.button`
   position: fixed;
-  top: 1.5rem;
-  right: 3rem;
+  top: 3rem;
+  right: 32rem;
+  cursor: pointer;
+  border: none;
+  overflow: auto;
+  margin: 0; /* Remova qualquer margem padrão do body para evitar espaçamento indesejado */
+  padding: 0;
 
-  background: ${({ theme }) => theme.colors.red};
-  padding: 0.5rem 1rem;
+  background: ${({ theme }) => theme.colors.gray800};
+  padding: 0.5rem 0.5rem;
   border-radius: 0.5rem;
   align-items: center;
 

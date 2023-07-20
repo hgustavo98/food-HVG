@@ -1,0 +1,836 @@
+
+
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Avaliação de eficiência das consultas</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+</style></head><body><article id="815512d2-29c1-4436-915c-be0b0187c0f6" class="page sans"><header><h1 class="page-title">Avaliação de eficiência das consultas</h1><p class="page-description"></p><table class="properties"><tbody></tbody></table></header><div class="page-body"><h2 id="b9cbe308-3f19-416e-ad14-0c5b3a9bd7cb" class="">Rota <code><strong>/snacks</strong></code>:</h2><p id="cd585795-af2e-4c58-8732-b4bea80001ba" class="">Formulação 1:</p><pre id="62c1e879-2869-4807-9c15-1beb88acba8f" class="code code-wrap"><code>sqlCopy code
+SELECT * FROM Snack WHERE snack = &#x27;drink&#x27;;
+
+</code></pre><p id="600334de-42d2-42ce-bfff-92ccd573ba15" class="">Formulação 2:</p><pre id="b77c4127-8ba5-4b2c-8976-1bf2fa07d6d4" class="code code-wrap"><code>sqlCopy code
+SELECT * FROM Snack WHERE snack LIKE &#x27;%drink%&#x27;;
+
+</code></pre><p id="790adf2b-dba9-4a4e-b6e2-c5a171219534" class="">Comparação: Ambas as formulações são eficientes para buscar lanches com o nome &quot;drink&quot;. A primeira formulação é mais precisa, pois obtém exatamente os lanches com o nome exato &quot;drink&quot;. Enquanto a segunda formulação usa o operador <code><strong>LIKE</strong></code> com <code><strong>%</strong></code> para permitir correspondências parciais, ou seja, ela também retornará lanches com nomes como &quot;drinks&quot;, &quot;drinking&quot;, etc. Portanto, a primeira formulação é mais eficiente em termos de precisão dos resultados.</p><h2 id="cb3e9fc7-7af7-4470-a49d-eb00b432b151" class="">Rota <code><strong>/snacks/maior</strong></code>:</h2><p id="18d67101-95b0-4ec6-831f-0c9257766239" class="">Formulação 1:</p><pre id="e7021b06-6b7c-4bd4-bd85-ede47e94d697" class="code code-wrap"><code>sqlCopy code
+SELECT * FROM Snack WHERE snack = &#x27;drink&#x27; ORDER BY price DESC;
+
+</code></pre><p id="fda42be9-e2eb-4d38-80c1-bc5d64dea01f" class="">Formulação 2:</p><pre id="40d4976b-fb4c-45cd-9cd5-03b5057d878c" class="code code-wrap"><code>sqlCopy code
+SELECT * FROM Snack WHERE snack = &#x27;drink&#x27; AND price = (SELECT MAX(price) FROM Snack WHERE snack = &#x27;drink&#x27;);
+
+</code></pre><p id="ca229722-20dd-47cc-8595-0bcecc31300c" class="">Comparação: A primeira formulação é mais eficiente e recomendada para obter todos os lanches com nome &quot;drink&quot; ordenados por preço de forma decrescente. Ela executa apenas um comando SQL com uma cláusula <code><strong>ORDER BY</strong></code> para classificar os resultados com base no preço. A segunda formulação, embora funcione, envolve uma subconsulta que busca o preço máximo do lanche &quot;drink&quot; e, em seguida, filtra os lanches com esse preço. Essa abordagem é menos eficiente, pois requer uma subconsulta adicional e pode levar a um desempenho inferior em comparação com a primeira formulação.</p><h2 id="e85db98b-9a35-45c4-85d3-34bebeca54b5" class="">Rota <code><strong>/snacks/menor</strong></code>:</h2><p id="8bb50773-0e2a-4635-a98e-64d8931e241c" class="">Formulação 1:</p><pre id="13fff434-1ce0-4ac5-a78e-6392be198c2b" class="code code-wrap"><code>sqlCopy code
+SELECT * FROM Snack WHERE snack = &#x27;drink&#x27; ORDER BY price ASC;
+
+</code></pre><p id="28038e08-9a6c-4a5e-b06b-49d4e58d41a4" class="">Formulação 2:</p><pre id="9b2260ab-39c3-4adc-9335-456ed122145c" class="code code-wrap"><code>sqlCopy code
+SELECT * FROM Snack WHERE snack = &#x27;drink&#x27; AND price = (SELECT MIN(price) FROM Snack WHERE snack = &#x27;drink&#x27;);
+
+</code></pre><p id="6c14a3ee-7faf-4fea-bde7-00474c14100e" class="">Comparação: Da mesma forma que na consulta anterior, a primeira formulação é mais eficiente para obter todos os lanches com nome &quot;drink&quot; ordenados por preço de forma crescente. A segunda formulação usa uma subconsulta para encontrar o preço mínimo dos lanches &quot;drink&quot;, o que pode impactar negativamente o desempenho em comparação com a primeira formulação. Portanto, a primeira formulação é preferível em termos de eficiência.</p><h2 id="d5ec00fe-4cf2-44ec-aeb1-b55acf67cb37" class="">Rota <code><strong>/paid-orders</strong></code>:</h2><p id="291cebd0-876d-4f86-b4d2-bc36815b42ec" class="">Formulação 1:</p><pre id="09bd0814-225e-46b0-817c-ad286f093e8d" class="code code-wrap"><code>sqlCopy code
+SELECT s.name AS snackName, c.fullName AS customerName
+FROM OrderItem AS oi
+JOIN `Order` AS o ON oi.orderId = o.id
+JOIN Snack AS s ON oi.snackId = s.id
+JOIN Customer AS c ON o.customerId = c.id
+WHERE o.status = &#x27;PAID&#x27;;
+
+</code></pre><p id="57bd5560-5cce-4d2c-be3f-c70db910cba7" class="">Formulação 2:</p><pre id="faa86eea-2dc1-47dd-a675-9b8c93ce512a" class="code code-wrap"><code>sqlCopy code
+SELECT s.name AS snackName, c.fullName AS customerName
+FROM Snack AS s, &quot;Order&quot; AS o, OrderItem AS oi, Customer AS c
+WHERE oi.orderId = o.id AND oi.snackId = s.id AND o.customerId = c.id AND o.status = &#x27;PAID&#x27;;
+
+</code></pre><p id="c2cba3dc-b6c3-488c-90f8-4f417a167a99" class="">Comparação: Ambas as formulações são eficientes, pois usam junções para obter os nomes dos lanches e dos clientes para itens de pedidos pagos. A primeira formulação usa a sintaxe explícita de junções <code><strong>JOIN</strong></code>, enquanto a segunda formulação usa a sintaxe implícita, listando todas as tabelas separadas por vírgula e definindo as condições de junção no <code><strong>WHERE</strong></code>. A primeira formulação é mais recomendada, pois é mais legível e expressiva, tornando mais fácil para outros desenvolvedores entenderem o propósito da consulta.</p><h2 id="3e7eaedf-853c-4de4-991a-38548dc4bdad" class="">Rota <code><strong>/customer-orders/:customerId</strong></code>:</h2><p id="bfa26cf4-4809-45f9-924d-8cb242af308d" class="">Formulação 1:</p><pre id="3adc07f5-b82f-4561-8b31-4cbf6aa9022c" class="code code-wrap"><code>sqlCopy code
+SELECT o.id AS orderId, o.status, o.total, s.name AS snackName, s.price AS snackPrice
+FROM &quot;Order&quot; AS o
+JOIN Customer AS c ON o.customerId = c.id
+JOIN OrderItem AS oi ON o.id = oi.orderId
+JOIN Snack AS s ON oi.snackId = s.id
+WHERE c.id = 1;
+
+</code></pre><p id="af287eff-8a4c-4d44-9978-853505a5df6d" class="">Formulação 2:</p><pre id="8d463a6d-f7c5-4882-8009-b81bad61b70b" class="code code-wrap"><code>sqlCopy code
+SELECT o.id AS orderId, o.status, o.total, s.name AS snackName, s.price AS snackPrice
+FROM &quot;Order&quot; AS o, Customer AS c, OrderItem AS oi, Snack AS s
+WHERE o.customerId = c.id AND o.id = oi.orderId AND oi.snackId = s.id AND c.id = 1;
+
+</code></pre><p id="9afcedd5-71bd-437d-9a69-1f688b22a611" class="">Comparação: Ambas as formulações são eficientes e obtêm todos os pedidos de um cliente específico. A primeira formulação usa a sintaxe explícita de junções <code><strong>JOIN</strong></code>, enquanto a segunda formulação usa a sintaxe implícita com a lista de tabelas separadas por vírgula e as condições de junção definidas no <code><strong>WHERE</strong></code>. Assim como na consulta anterior, a primeira formulação é mais legível e recomendada.</p><h2 id="f028bd7e-72c2-49b0-a61b-f32d16fad7f6" class="">Rota <code><strong>/order-items/:orderId</strong></code>:</h2><p id="03aff146-0589-4eed-8984-3458e66ca012" class="">Formulação 1:</p><pre id="7c53b0da-0341-4209-884f-60b5650f1e0c" class="code code-wrap"><code>sqlCopy code
+SELECT oi.id AS orderItemId, oi.quantity, oi.subTotal, s.name AS snackName, s.price AS snackPrice, o.id AS orderId, o.status, o.total, c.fullName AS customerName
+FROM OrderItem AS oi
+JOIN Snack AS s ON oi.snackId = s.id
+JOIN &quot;Order&quot; AS o ON oi.orderId = o.id
+JOIN Customer AS c ON o.customerId = c.id
+WHERE o.id = &lt;orderId&gt;;
+
+</code></pre><p id="932d495e-4cf3-4bd4-ad40-c979a650d70c" class="">Formulação 2:</p><pre id="d21efc5e-c925-4450-9c9b-68088986e48f" class="code code-wrap"><code>sqlCopy code
+SELECT oi.id AS orderItemId, oi.quantity, oi.subTotal, s.name AS snackName, s.price AS snackPrice, o.id AS orderId, o.status, o.total, c.fullName AS customerName
+FROM OrderItem AS oi, Snack AS s, &quot;Order&quot; AS o, Customer AS c
+WHERE oi.snackId = s.id AND oi.orderId = o.id AND o.customerId = c.id AND o.id = &lt;orderId&gt;;
+
+</code></pre><p id="a3bdceb4-19b5-4004-8466-dced9f925d13" class="">Comparação: As duas formulações são eficientes e obtêm todos os itens de pedido por um ID de pedido específico. A primeira formulação usa a sintaxe explícita de junções <code><strong>JOIN</strong></code>, enquanto a segunda formulação usa a sintaxe implícita com a lista de tabelas separadas por vírgula e as condições de junção definidas no <code><strong>WHERE</strong></code>. Novamente, a primeira formulação é mais legível e preferível.</p><h2 id="cb105fd4-4d33-4872-b6b9-dc4e8effa7b8" class="">Rota <code><strong>/customer-orders/:customerId</strong></code> (3 Junções de Três ou Mais Relações):</h2><p id="085bdf4f-a523-4f2a-a8d5-82e14654e96f" class="">Formulação 1:</p><pre id="facd641b-91c6-454c-85cf-16308ad90dd4" class="code code-wrap"><code>sqlCopy code
+SELECT o.id AS orderId, o.status, o.total, s.name AS snackName, s.price AS snackPrice, c.fullName AS customerName
+FROM &quot;Order&quot; AS o
+JOIN Customer AS c ON o.customerId = c.id
+JOIN OrderItem AS oi ON o.id = oi.orderId
+JOIN Snack AS s ON oi.snackId = s.id
+WHERE c.id = 1;
+
+</code></pre><p id="2f686aff-9828-49c2-a43f-5b2548b7a053" class="">Formulação 2:</p><pre id="3c9ef8b3-cccc-4222-9f25-fff91aa063b0" class="code code-wrap"><code>sqlCopy code
+SELECT o.id AS orderId, o.status, o.total, s.name AS snackName, s.price AS snackPrice, c.fullName AS customerName
+FROM &quot;Order&quot; AS o, Customer AS c, OrderItem AS oi, Snack AS s
+WHERE o.customerId = c.id AND o.id = oi.orderId AND oi.snackId = s.id AND c.id = 1;
+
+</code></pre><p id="51168fa9-cedb-4ab9-a70c-27c61cf1c6d6" class="">Comparação: Essas formulações são as mesmas que foram apresentadas anteriormente na rota <code><strong>/customer-orders/:customerId</strong></code>. Assim, a comparação continua sendo a mesma, e a primeira formulação é preferível por sua legibilidade.</p><h2 id="0ada4709-358a-4cc6-8997-293559bbf339" class="">Rota <code><strong>/orders-with-items-quantity-greater-than-2</strong></code>:</h2><p id="2d7779bf-b5f1-4217-95d0-bab15129ba95" class="">Formulação 1:</p><pre id="c7b71e09-c6b6-4bca-8fa4-c352f581926c" class="code code-wrap"><code>sqlCopy code
+SELECT c.fullName AS customerName, SUM(o.total) AS totalSpent, oi.quantity, s.name AS snackName, s.price AS snackPrice
+FROM Customer AS c
+JOIN &quot;Order&quot; AS o ON c.id = o.customerId
+JOIN OrderItem AS oi ON o.id = oi.orderId
+JOIN Snack AS s ON oi.snackId = s.id
+GROUP BY c.fullName, oi.quantity, s.name, s.price
+HAVING oi.quantity &gt; 2;
+
+</code></pre><p id="dbdc41ef-300b-449e-9658-9a330cf0f745" class="">Formulação 2:</p><pre id="ca702ac7-3277-4675-a252-60de5f474004" class="code code-wrap"><code>sqlCopy code
+SELECT c.fullName AS customerName, SUM(o.total) AS totalSpent, oi.quantity, s.name AS snackName, s.price AS snackPrice
+FROM Customer AS c, &quot;Order&quot; AS o, OrderItem AS oi, Snack AS s
+WHERE c.id = o.customerId AND o.id = oi.orderId AND oi.snackId = s.id
+GROUP BY c.fullName, oi.quantity, s.name, s.price
+HAVING oi.quantity &gt; 2;
+
+</code></pre><p id="010bb401-7aee-49d2-a6f2-e25d7ebbb19a" class="">Comparação: Ambas as formulações são eficientes e obtêm os pedidos com itens com quantidade maior que 2. A primeira formulação usa a sintaxe explícita de junções <code><strong>JOIN</strong></code>, enquanto a segunda formulação usa a sintaxe implícita com a lista de tabelas separadas por vírgula e as condições de junção definidas no <code><strong>WHERE</strong></code>. A primeira formulação é preferível pela sua clareza e legibilidade.</p><h2 id="3fc44043-b03c-487b-91ab-f9bce03896d4" class="">Rota <code><strong>/customers-total-spent</strong></code>:</h2><p id="e0576d62-24ab-4741-bd91-b91ebf941dcf" class="">Formulação 1:</p><pre id="6ac19f2d-00b0-4383-83dd-46bf29d060db" class="code code-wrap"><code>sqlCopy code
+SELECT c.fullName, SUM(o.total) AS totalSpent
+FROM Customer AS c
+JOIN &quot;Order&quot; AS o ON c.id = o.customerId
+GROUP BY c.fullName;
+
+</code></pre><p id="293a82f0-9746-43bc-96d4-be7b88205b1a" class="">Formulação 2:</p><pre id="15beb191-8087-45f3-a039-d61dc33c4ef8" class="code code-wrap"><code>sqlCopy code
+SELECT c.fullName, SUM(o.total) AS totalSpent
+FROM Customer AS c, &quot;Order&quot; AS o
+WHERE c.id = o.customerId
+GROUP BY c.fullName;
+
+</code></pre><p id="6c1ab02c-dee0-48db-8132-559f0c7b8074" class="">Comparação: Ambas as formulações são eficientes e obtêm o valor total gasto por cada cliente. A primeira formulação usa a sintaxe explícita de junções <code><strong>JOIN</strong></code>, enquanto a segunda formulação usa a sintaxe implícita com a lista de tabelas separadas por vírgula e as condições de junção definidas no <code><strong>WHERE</strong></code>. Novamente, a primeira formulação é preferível por sua clareza e legibilidade.</p><h2 id="03a15919-f2c5-4612-b65f-8bf46dd5a664" class="">Rota <code><strong>/customer-total-spent/:customerId</strong></code>:</h2><p id="a4ec6577-f2e1-476f-9dcc-956bc6dc540a" class="">Formulação 1:</p><pre id="62cb99b3-1cd9-4073-9110-4b807b257244" class="code code-wrap"><code>sqlCopy code
+SELECT SUM(o.total) AS customerTotalSpent
+FROM &quot;Order&quot; AS o
+JOIN Customer AS c ON o.customerId = c.id
+WHERE c.id = &lt;customerId&gt;;
+
+</code></pre><p id="f6b3577b-f14b-4994-8093-7a0c258dbad7" class="">Formulação 2:</p><pre id="058a749f-4fe7-49a0-94c5-39391a4f5428" class="code code-wrap"><code>sqlCopy code
+SELECT SUM(total) AS customerTotalSpent
+FROM &quot;Order&quot;
+WHERE customerId = &lt;customerId&gt;;
+
+</code></pre><p id="1c3e4efd-4135-4e56-b8b2-f3b0a3dbb06e" class="">Comparação: Ambas as formulações são eficientes e obtêm o valor total gasto por um cliente específico. A primeira formulação usa a sintaxe explícita de junções <code><strong>JOIN</strong></code>, enquanto a segunda formulação faz a agregação diretamente na tabela de pedidos. A primeira formulação é preferível em termos de clareza e legibilidade, pois explicita a relação entre as tabelas usando junções.</p><h2 id="bfbeba5f-5ce7-4659-b2db-785cd468cc67" class="">Rota <code><strong>/customer-total-items/:customerId</strong></code>:</h2><p id="b249ba79-8f05-4815-997f-13962ff05094" class="">Formulação 1:</p><pre id="dc52ae08-1591-45c4-9573-6bd4f8ddc55a" class="code code-wrap"><code>sqlCopy code
+SELECT SUM(oi.quantity) AS customerTotalItems
+FROM OrderItem AS oi
+JOIN &quot;Order&quot; AS o ON oi.orderId = o.id
+WHERE o.customerId = &lt;customerId&gt;;
+
+</code></pre><p id="7650feee-2c4c-4a1b-9c1d-1bbfdf071831" class="">Formulação 2:</p><pre id="2f47b29a-5dc7-4c20-9687-77942d05a6f3" class="code code-wrap"><code>sqlCopy code
+SELECT SUM(quantity) AS customerTotalItems
+FROM OrderItem, &quot;Order&quot;
+WHERE orderId = id AND customerId = &lt;customerId&gt;;
+
+</code></pre><p id="a985331f-8859-4b2f-92a7-1ff2bf935da0" class="">Comparação: Ambas as formulações são eficientes e obtêm o número total de itens em pedidos de um cliente. A primeira formulação usa a sintaxe explícita de junções <code><strong>JOIN</strong></code>, enquanto a segunda formulação faz a agregação diretamente na tabela de itens de pedido, sem especificar explicitamente a relação entre as tabelas. A primeira formulação é preferível pela sua clareza e legibilidade.</p><h2 id="0c7f5c0f-bcde-4dd6-98f9-acb3e066c4f0" class="">Rota <code><strong>/report-sales-by-snack</strong></code>:</h2><p id="c0cabdfc-82c4-4665-a2d6-53bed023d156" class="">Formulação 1:</p><pre id="dea49d1b-9b8f-47f5-a942-b6dc81a10a2a" class="code code-wrap"><code>sqlCopy code
+SELECT snackId, SUM(quantity) AS totalSales
+FROM OrderItem
+GROUP BY snackId;
+
+</code></pre><p id="33cdb9c6-b5ac-43e9-90a5-d08c20ff0b74" class="">Formulação 2:</p><pre id="164f40a4-bb73-4004-80b0-8f608f8985e7" class="code code-wrap"><code>sqlCopy code
+SELECT snackId, COUNT(snackId) AS totalSales
+FROM OrderItem
+GROUP BY snackId;
+
+</code></pre><p id="2f44b3f9-e6ee-464b-bf23-df6259c4359e" class="">Comparação: Ambas as formulações são eficientes para gerar o relatório de vendas totais por lanche. A primeira formulação usa a função de agregação <code><strong>SUM</strong></code> para calcular o total de vendas, enquanto a segunda formulação usa a função de agregação <code><strong>COUNT</strong></code> para contar o número total de vendas. Ambas fornecerão resultados corretos, mas a primeira formulação é preferível, pois é mais precisa em termos de representar o total real de vendas (somando as quantidades vendidas).</p><h2 id="8fdcd845-970d-4eb6-8464-9325f5bccb80" class="">Rota <code><strong>/report-orders-by-customer</strong></code>:</h2><p id="ab4d6328-936f-4fdb-9fb1-9b7d71a746dd" class="">Formulação 1:</p><pre id="4c8215b3-1298-4958-8992-6c31dc9de232" class="code code-wrap"><code>sqlCopy code
+SELECT c.id AS customerId, c.fullName AS customerName, COUNT(o.id) AS totalOrders
+FROM Customer AS c
+LEFT JOIN &quot;Order&quot; AS o ON c.id = o.customerId
+GROUP BY c.id, c.fullName;
+
+</code></pre><p id="446587ed-5b53-4024-a059-05faa846e199" class="">Formulação 2:</p><pre id="8ece0850-cf2e-4299-94a9-4f555a3059ba" class="code code-wrap"><code>sqlCopy code
+SELECT customerId, customerName, COUNT(orderId) AS totalOrders
+FROM (
+    SELECT c.id AS customerId, c.fullName AS customerName, o.id AS orderId
+    FROM Customer AS c, &quot;Order&quot; AS o
+    WHERE c.id = o.customerId
+) AS CustomerOrders
+GROUP BY customerId, customerName;
+
+</code></pre><p id="443441b7-2a0a-4423-9252-5ea7a03869c9" class="">Comparação: Ambas as formulações são eficientes para gerar o relatório de pedidos realizados por cliente. A primeira formulação usa a sintaxe explícita de junções <code><strong>LEFT JOIN</strong></code>, enquanto a segunda formulação usa a sintaxe implícita com a lista de tabelas separadas por vírgula e a subconsulta <code><strong>CustomerOrders</strong></code>. A primeira formulação é preferível pela sua clareza e legibilidade.</p><h2 id="49eaa150-d5f4-4632-91e7-03eedcddde0b" class="">Rota <code><strong>/report-monthly-sales</strong></code>:</h2><p id="04c41370-8cd2-4cc8-8eac-89d22a7f8c2c" class="">Formulação 1:</p><pre id="fce97618-f3e5-4ba8-b335-c68a2c4344d4" class="code code-wrap"><code>sqlCopy code
+SELECT DATE_FORMAT(createdAt, &quot;%Y-%m&quot;) AS month, SUM(total) AS totalSales
+FROM `Order`
+GROUP BY month
+ORDER BY month;
+
+</code></pre><p id="fbae87e7-9ca4-4c96-b1f1-6e7934631934" class="">Formulação 2:</p><pre id="05267697-923c-459e-b2ec-b245c091277b" class="code code-wrap"><code>sqlCopy code
+SELECT SUBSTRING(createdAt, 1, 7) AS month, SUM(total) AS totalSales
+FROM `Order`
+GROUP BY month
+ORDER BY month;
+
+</code></pre><p id="e5198496-582e-4909-ba76-ad21e9ad2271" class="">Comparação: Ambas as formulações são eficientes para gerar o relatório de vendas mensais. A primeira formulação usa a função <code><strong>DATE_FORMAT</strong></code> para extrair o ano e mês da data de criação dos pedidos. A segunda formulação usa a função <code><strong>SUBSTRING</strong></code> para extrair o ano e mês da mesma forma. Ambas fornecerão resultados corretos, mas a primeira formulação é preferível, pois usa uma função específica para formatação de datas.</p></div></article></body></html>
