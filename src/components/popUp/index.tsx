@@ -19,13 +19,13 @@ export function PopUp() {
       </Container>
       {showPopup && (
         <PopupContent>
-          <h2>Comandos utilizados na Página </h2>
+        <h2>Comandos utilizados na Página </h2>
           <h3>GET /snacks: </h3>
-          <p> SELECT * FROM Snack WHERE snack = valor_de_snack ;</p>
+          <p> SELECT * FROM Snack WHERE snack =&quot;&lt;valor_de_snack&gt;&quot;;</p>
           <h3>GET /snacks/maior: </h3>
-          <p>SELECT * FROM Snack WHERE snack = valor_de_snack ORDER BY price DESC;</p>
+          <p>SELECT * FROM Snack WHERE snack =&quot;&lt;valor_de_snack&gt;&quot; ORDER  BY price DESC;</p>
           <h3>GET /snacks/menor: </h3>
-          <p> SELECT * FROM Snack WHERE snack = valor_de_snack ORDER BY price ASC;</p>
+          <p> SELECT * FROM Snack WHERE snack =&quot;&lt;valor_de_snack&gt;&quot; ORDER BY price ASC;</p>
           <CloseButton onClick={handleClosePopup}>Fechar</CloseButton>
         </PopupContent>
       )}

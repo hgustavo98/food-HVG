@@ -26,6 +26,7 @@ import {
   CustomersTotalSpent
 ,
 } from './/type';
+import { PopUpadm } from '../../components/popUpadm';
 
 
 export default function StatusPage() {
@@ -151,6 +152,7 @@ export default function StatusPage() {
       <Head title='Status' />
 
       <Inner>
+        <PopUpadm></PopUpadm>
         <Title>Painel de Admin</Title>
 
         <SubTitle>Consultas SQL e Resultados</SubTitle>
@@ -200,7 +202,7 @@ export default function StatusPage() {
         {/* Exibir o resultado para cada requisição */}
         <div>
           <h3>Resultado:</h3>
-          <Table>{consoleOutput}</Table>
+          <Table><th>{consoleOutput}</th></Table>
         </div>
 
         <br />
