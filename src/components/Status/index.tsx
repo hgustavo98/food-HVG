@@ -4,7 +4,7 @@ import { Container } from './styles'
 export function Mystatus() {
   return (
     <Container to={'status'}>
-      <span>Status</span>
+      <span>Admin</span>
 
     </Container>
   )
